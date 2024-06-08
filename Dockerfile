@@ -8,6 +8,6 @@ COPY --chown=node:node package*.json ./
 
 USER node
 
-RUN npm install
+RUN npm install --verbose
 
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
