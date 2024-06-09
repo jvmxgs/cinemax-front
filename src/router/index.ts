@@ -1,9 +1,10 @@
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import { useAuthStore } from '@/stores/auth'
-import AdminView from '@/views/AdminView.vue'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
+import AdminView from '@/views/admin/AdminView.vue'
+import MoviesView from '@/views/admin/MoviesView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -28,12 +29,32 @@ const router = createRouter({
     {
       path: '/admin',
       component: AdminLayout,
+      meta: {
+        requiresAuth: true
+      },
       children: [
         {
           path: '',
           name: 'Admin',
-          component: AdminView,
-          meta: { requiresAuth: true }
+          component: AdminView
+        },
+        {
+          path: 'movies',
+          name: 'MoviesList',
+          component: MoviesView,
+          meta: {
+            breadcrumb: 'Movies'
+          },
+          children: [
+            {
+              path: 'add',
+              name: 'MoviesAdd',
+              component: MoviesView,
+              meta: {
+                breadcrumb: 'Add movie'
+              },
+            }
+          ]
         }
       ]
     }

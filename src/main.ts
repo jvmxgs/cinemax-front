@@ -7,6 +7,7 @@ import PrimeVue from 'primevue/config'
 import { createApp } from 'vue'
 
 import Lara from '@/presets/lara'
+import ConfirmationService from 'primevue/confirmationservice'
 import ToastService from 'primevue/toastservice'
 import App from './App.vue'
 import router from './router'
@@ -20,5 +21,6 @@ app.use(PrimeVue, {
   pt: Lara
 })
 app.use(ToastService)
+app.use(ConfirmationService)
 
 app.mount('#app')

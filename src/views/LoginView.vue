@@ -65,7 +65,7 @@ import { useAuthStore } from '../stores/auth'
       errors.value = []
       const data = await loginService({ email: email.value, password: password.value })
       authStore.setToken(data.data.data.access_token)
-      router.push('/admin')
+      router.push({ name: 'Admin' })
     } catch (e) {
       loading.value = false
       errors.value = e.response.data.errors

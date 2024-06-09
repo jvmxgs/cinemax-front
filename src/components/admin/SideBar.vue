@@ -1,54 +1,58 @@
 <script setup lang="ts">
-import { useOpenSidebarStore } from "@/stores/openSidebar";
-import Avatar from "primevue/avatar";
-import Badge from "primevue/badge";
-import Image from "primevue/image";
-import Menu from "primevue/menu";
-import { ref } from "vue";
+import { useOpenSidebarStore } from "@/stores/openSidebar"
+import Badge from "primevue/badge"
+import Image from "primevue/image"
+import Menu from "primevue/menu"
+import { ref } from "vue"
+import { useRouter } from 'vue-router'
 
-
-const store = useOpenSidebarStore();
-const { hideSidebar } = store;
+const router = useRouter()
+const store = useOpenSidebarStore()
+const { hideSidebar } = store
 
 const items = ref([
+    {
+        label: 'Home',
+        icon: 'pi pi-home',
+        command: () => {
+            router.push({ name: 'Admin' })
+        }
+    },
     {
         separator: true
     },
     {
-        label: 'Documents',
+        label: 'Movies',
         items: [
             {
-                label: 'New',
-                icon: 'pi pi-plus'
+                label: 'List',
+                icon: 'pi pi-video',
+                command: () => {
+                    router.push({ name: 'MoviesList' })
+                }
             },
             {
-                label: 'Search',
-                icon: 'pi pi-search'
+                label: 'Add',
+                icon: 'pi pi-plus',
+                command: () => {
+                    router.push({ name: 'MoviesAdd' })
+                }
             }
         ]
     },
     {
-        label: 'Profile',
+        label: 'Schedules',
         items: [
             {
-                label: 'Settings',
-                icon: 'pi pi-cog'
-            },
-            {
-                label: 'Messages',
-                icon: 'pi pi-inbox',
-                badge: 2
-            },
-            {
-                label: 'Logout',
-                icon: 'pi pi-sign-out'
+                label: 'List',
+                icon: 'pi pi-calendar'
             }
         ]
     },
     {
         separator: true
     }
-]);
+])
 </script>
 
 <template>
@@ -74,15 +78,6 @@ const items = ref([
                     <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
                     <span v-if="item.shortcut" class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{{ item.shortcut }}</span>
                 </a>
-            </template>
-            <template #end>
-                <button class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
-                    <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" class="mr-2" shape="circle" />
-                    <span class="inline-flex flex-column">
-                        <span class="font-bold">Amy Elsner</span>
-                        <span class="text-sm">Admin</span>
-                    </span>
-                </button>
             </template>
         </Menu>
     </div>

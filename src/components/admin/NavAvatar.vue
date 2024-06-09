@@ -1,28 +1,43 @@
 <script setup lang="ts">
-import Avatar from 'primevue/avatar';
-import Menu from 'primevue/menu';
-import { ref } from "vue";
+import Avatar from 'primevue/avatar'
+import Menu from 'primevue/menu'
+import { ref } from "vue"
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../../stores/auth'
+
+const router = useRouter()
+const authStore = useAuthStore()
 
 const menu = ref();
 const items = ref([
     {
         label: 'Jhon Doe',
         items: [
-            {
+/*             {
                 label: 'Account',
                 icon: 'pi pi-user'
-            },
+            }, */
             {
                 label: 'Sign out',
-                icon: 'pi pi-sign-out'
+                icon: 'pi pi-sign-out',
+                iconOnly: true,
+                command: () => {
+                  singOut()
+                }
             }
         ]
     }
 ]);
 
 const toggle = (event) => {
-    menu.value.toggle(event);
+    menu.value.toggle(event)
 };
+
+const singOut = () => {
+  authStore.clearToken()
+  router.push({ name: 'Login' })
+}
+
 </script>
 
 <template>
