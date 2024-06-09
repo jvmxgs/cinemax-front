@@ -9,8 +9,8 @@ import SideBar from '@/components/admin/SideBar.vue';
     <SideBar />
     <div class="flex flex-col flex-grow h-full">
       <NavBar />
-      <div class="flex-grow">
-
+      <div class="flex-grow p-6">
+        <router-view />
       </div>
     </div>
   </main>

@@ -1,7 +1,9 @@
-import '../node_modules/flowbite-vue/dist/index.css'
+import 'primeicons/primeicons.css'
+import 'primevue/resources/themes/saga-orange/theme.css'
 import './assets/main.css'
 
 import { createPinia } from 'pinia'
+import PrimeVue from 'primevue/config'
 import { createApp } from 'vue'
 
 import App from './App.vue'
@@ -11,5 +13,6 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+app.use(PrimeVue)
 
 app.mount('#app')
