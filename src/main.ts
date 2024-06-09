@@ -7,6 +7,7 @@ import PrimeVue from 'primevue/config'
 import { createApp } from 'vue'
 
 import Lara from '@/presets/lara'
+import ToastService from 'primevue/toastservice'
 import App from './App.vue'
 import router from './router'
 
@@ -18,5 +19,6 @@ app.use(PrimeVue, {
   unstyled: true,
   pt: Lara
 })
+app.use(ToastService)
 
 app.mount('#app')
