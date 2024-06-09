@@ -59,7 +59,7 @@ const items = ref([
 <template>
   <Menubar>
     <template #start>
-        <span class="w-10 h-10 pi pi-bars cursor-pointer" @click="toggleSidebar" v-if="!store.isSidebarOpen" />
+        <span class="text-xl pi pi-bars cursor-pointer ml-2" @click="toggleSidebar" v-if="!store.isSidebarOpen" />
     </template>
     <template #end>
         <NavAvatar />
