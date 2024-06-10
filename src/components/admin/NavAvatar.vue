@@ -13,10 +13,13 @@ const items = ref([
     {
         label: 'Jhon Doe',
         items: [
-/*             {
-                label: 'Account',
-                icon: 'pi pi-user'
-            }, */
+            {
+                label: 'Dashboard',
+                icon: 'pi pi-th-large',
+                command: () => {
+                  router.push('/admin')
+                }
+            },
             {
                 label: 'Sign out',
                 icon: 'pi pi-sign-out',

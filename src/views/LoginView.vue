@@ -1,7 +1,10 @@
 <template>
-  <div class="flex justify-center items-center w-full h-full">
+  <div class="flex flex-col justify-center items-center w-screen h-screen gap-4">
+    <Image src="/logo.png" alt="Image" width="240" />
     <Card class="w-full max-w-sm sm:p-4 md:p-6">
-      <template #title>Login</template>
+      <template #title>
+        Login
+      </template>
       <template #content>
         <section class="flex flex-col gap-6 mt-4">
           <transition-group name="p-message" tag="div">
@@ -40,6 +43,7 @@
 import Button from 'primevue/button'
 import Card from 'primevue/card'
 import FloatLabel from 'primevue/floatlabel'
+import Image from 'primevue/image'
 import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 import InputText from 'primevue/inputtext'
