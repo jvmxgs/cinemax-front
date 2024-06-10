@@ -41,11 +41,21 @@ const items = ref([
         ]
     },
     {
-        label: 'Schedules',
+        label: 'Time slots',
         items: [
             {
                 label: 'List',
-                icon: 'pi pi-calendar'
+                icon: 'pi pi-calendar',
+                command: () => {
+                    router.push({ name: 'TimeslotsList' })
+                }
+            },
+            {
+                label: 'Add',
+                icon: 'pi pi-plus',
+                command: () => {
+                    router.push({ name: 'TimeslotAdd' })
+                }
             }
         ]
     },

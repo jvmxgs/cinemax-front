@@ -7,6 +7,9 @@ import AdminView from '@/views/admin/AdminView.vue'
 import MovieFormView from '@/views/admin/MovieFormView.vue'
 import MovieShowView from '@/views/admin/MovieShowView.vue'
 import MoviesView from '@/views/admin/MoviesView.vue'
+import TimeslotFormView from '@/views/admin/TimeslotFormView.vue'
+import TimeslotShowView from '@/views/admin/TimeslotShowView.vue'
+import TimeslotsView from '@/views/admin/TimeslotsView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -76,6 +79,46 @@ const router = createRouter({
               component: MovieFormView,
               meta: {
                 breadcrumb: 'Edit movie'
+              },
+            }
+          ]
+        },
+        {
+          path: 'timeslots',
+          meta: {
+            breadcrumb: 'Timeslots'
+          },
+          children: [
+            {
+              path: '',
+              name: 'TimeslotsList',
+              component: TimeslotsView,
+              meta: {
+                breadcrumb: 'List'
+              },
+            },
+            {
+              path: ':id',
+              name: 'TimeslotShow',
+              component: TimeslotShowView,
+              meta: {
+                breadcrumb: 'Timeslot'
+              },
+            },
+            {
+              path: 'add',
+              name: 'TimeslotAdd',
+              component: TimeslotFormView,
+              meta: {
+                breadcrumb: 'Add timeslots'
+              },
+            },
+            {
+              path: ':id/edit',
+              name: 'TimeslotsEdit',
+              component: TimeslotFormView,
+              meta: {
+                breadcrumb: 'Edit timeslots'
               },
             }
           ]
