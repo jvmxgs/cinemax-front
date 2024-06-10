@@ -2,6 +2,7 @@
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import ConfirmPopup from 'primevue/confirmpopup';
+import Skeleton from 'primevue/skeleton';
 import Toast from 'primevue/toast';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
@@ -12,6 +13,7 @@ import { deleteMovie, getMovie } from '../../services/moviesService';
 const route = useRoute()
 const router = useRouter()
 const notFound = ref(false)
+const loadingData = ref(false)
 const movie = ref(null)
 const confirm = useConfirm()
 const toast = useToast()
@@ -34,16 +36,17 @@ const deleteItem = (event, movieId) => {
 }
 
 onMounted(() => {
+  loadingData.value = true
   getMovie(route.params.id).then(res => {
     movie.value = res.data
   }).catch(err => {
     notFound.value = true
     console.log(err)
-  })
+  }).finally(() => loadingData.value = false)
 })
 </script>
 <template>
-  <Card class="shadow-none" v-if="movie">
+  <Card class="shadow-none" v-if="movie && !loadingData">
     <template #title>
       <div class="flex justify-between">
         Simple Card
@@ -85,6 +88,22 @@ onMounted(() => {
               </div>
           </template>
         </ConfirmPopup>
+      </div>
+    </template>
+  </Card>
+  <Card v-if="loadingData">
+    <template #content>
+      <div class="flex flex-col md:flex-row">
+        <div class="md:w-1/3 mb-4 md:mb-0">
+          <Skeleton width="30%" height="3rem" class="mb-4"></Skeleton>
+          <Skeleton width="100%" height="25rem"></Skeleton>
+        </div>
+        <div class="md:w-2/3 md:pl-6 pt-8">
+          <Skeleton width="30%" height="3rem"></Skeleton>
+          <Skeleton width="40%" height="2rem"></Skeleton>
+          <Skeleton width="40%" height="2rem"></Skeleton>
+          <Skeleton width="40%" height="2rem"></Skeleton>
+        </div>
       </div>
     </template>
   </Card>

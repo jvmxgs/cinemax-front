@@ -8,6 +8,7 @@ import Image from 'primevue/image';
 import InlineMessage from 'primevue/inlinemessage';
 import InputText from 'primevue/inputtext';
 import Message from 'primevue/message';
+import Skeleton from 'primevue/skeleton';
 import Textarea from 'primevue/textarea';
 import { inject, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -20,6 +21,7 @@ const showToast = inject('showToast')
 const error = ref('')
 const errors = ref([])
 const loading = ref(false)
+const loadingData = ref(false)
 const editMode = ref(false)
 const notFound = ref(false)
 const title = ref('')
@@ -49,9 +51,10 @@ const updatePoster = (event) => {
 const createMovie = async () => {
   const formData = parseFormData()
 
+  loading.value = true
   storeMovie(formData)
   .then((response) => {
-    loading.value = true
+    loading.value = false
     showToast('success', 'Movie added', response.data.message, 3000)
     router.push('/admin/movies/' + response.data.data.id)
   })
@@ -66,9 +69,10 @@ const saveMovie = async () => {
   const formData = parseFormData()
   formData.append('_method', 'PATCH')
 
+  loading.value = true
   updateMovie(formData, route.params.id)
   .then((response) => {
-    loading.value = true
+    loading.value = false
     showToast('success', 'Movie updated', response.data.message, 3000)
     router.push('/admin/movies/' + response.data.data.id)
   })
@@ -94,6 +98,7 @@ const parseFormData = () => {
 
 onMounted(() => {
   if (route.params.id) {
+    loadingData.value = true
     getMovie(route.params.id).then(res => {
       title.value = res.data.title
       description.value = res.data.description
@@ -104,6 +109,8 @@ onMounted(() => {
     }).catch(err => {
       notFound.value = true
       console.log(err)
+    }).finally(() => {
+      loadingData.value = false
     })
   }
 })
@@ -134,7 +141,7 @@ const genres = [
 
 </script>
 <template>
-  <Card class="shadow-none">
+  <Card class="shadow-none" v-if="!loadingData">
     <template #title>{{ editMode ? 'Edit movie' : 'Add movie' }}</template>
     <template #content>
       <div>
@@ -187,8 +194,46 @@ const genres = [
     </template>
     <template #footer>
       <div class="flex justify-end w-full">
-        <Button @click="createMovie" :loading="loading" v-if="!editMode">Create movie</Button>
-        <Button @click="saveMovie" :loading="loading" v-if="editMode">Update movie</Button>
+        <Button @click="createMovie" :loading="loading" label="Create movie" v-if="!editMode" />
+        <Button @click="saveMovie" :loading="loading" label="Update movie" v-if="editMode" />
+      </div>
+    </template>
+  </Card>
+  <Card v-if="loadingData">
+    <template #content>
+      <div class="border-round border-1 surface-border p-4 surface-card">
+        <ul class="m-0 p-0 list-none">
+            <li class="mb-3">
+                <div class="flex">
+                    <div class="align-self-center" style="flex: 1">
+                        <Skeleton width="10%" height="3rem" class="mb-2"></Skeleton>
+                        <Skeleton width="100%" height="3rem" class="mb-2"></Skeleton>
+                        <Skeleton width="75%"></Skeleton>
+                    </div>
+                </div>
+            </li>
+            <li class="mb-3">
+                <div class="flex">
+                    <div class="align-self-center" style="flex: 1">
+                        <Skeleton width="100%" height="3rem" class="mb-2"></Skeleton>
+                        <Skeleton width="75%"></Skeleton>
+                    </div>
+                </div>
+            </li>
+            <li class="mb-3">
+                <div class="flex">
+                    <div class="align-self-center" style="flex: 1">
+                        <Skeleton width="10%" height="3rem" class="mb-2"></Skeleton>
+                        <Skeleton width="5%"></Skeleton>
+                    </div>
+                </div>
+            </li>
+            <li>
+              <div class="flex justify-end">
+                  <Skeleton width="10%" height="3rem"></Skeleton>
+              </div>
+            </li>
+        </ul>
       </div>
     </template>
   </Card>

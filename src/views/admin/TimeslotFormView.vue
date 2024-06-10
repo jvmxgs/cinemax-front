@@ -7,6 +7,7 @@ import FloatLabel from 'primevue/floatlabel'
 import InlineMessage from 'primevue/inlinemessage'
 import InputText from 'primevue/inputtext'
 import Message from 'primevue/message'
+import Skeleton from 'primevue/skeleton'
 import { inject, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getMovies } from '../../services/moviesService'
@@ -20,6 +21,7 @@ const movies = ref()
 const error = ref('')
 const errors = ref<Record<string, string[]>>({})
 const loading = ref(false)
+const loadingData = ref(false)
 const editMode = ref(false)
 const notFound = ref(false)
 const start_time = ref()
@@ -29,9 +31,10 @@ const is_active = ref()
 const createTimeslot = async () => {
   const formData = parseFormData()
 
+  loading.value = true;
   storeTimeslot(formData)
     .then((response) => {
-      loading.value = true;
+      loading.value = false;
       showToast('success', 'Timeslot added', response.data.message, 3000);
       router.push('/admin/timeslots/' + response.data.data.id);
     })
@@ -46,18 +49,19 @@ const saveTimeslot = async () => {
   const formData = parseFormData();
   formData.append('_method', 'PATCH');
 
+  loading.value = true;
   updateTimeslot(formData, route.params.id)
     .then((response) => {
-      loading.value = true;
-      showToast('success', 'Timeslot updated', response.data.message, 3000);
-      router.push('/admin/timeslots');
+      loading.value = false
+      showToast('success', 'Timeslot updated', response.data.message, 3000)
+      router.push('/admin/timeslots')
     })
     .catch((e) => {
       loading.value = false;
-      errors.value = e.response.data.errors;
-      error.value = e.response.data.message;
-    });
-};
+      errors.value = e.response.data.errors
+      error.value = e.response.data.message
+    })
+}
 
 const parseFormData = () => {
   const formData = new FormData()
@@ -75,6 +79,7 @@ onMounted(() => {
   })
 
   if (route.params.id) {
+    loadingData.value = true
     getTimeslot(route.params.id)
       .then((res) => {
         console.log(res.data)
@@ -86,13 +91,13 @@ onMounted(() => {
       .catch((err) => {
         notFound.value = true;
         console.log(err)
-      })
+      }).finally(() => loadingData.value = false)
   }
 })
 </script>
 
 <template>
-  <Card class="shadow-none">
+  <Card class="shadow-none" v-if="!loadingData">
     <template #title>{{ editMode ? 'Edit Timeslot' : 'Add Timeslot' }}</template>
     <template #content>
       <div>
@@ -124,8 +129,46 @@ onMounted(() => {
     </template>
     <template #footer>
       <div class="flex justify-end w-full">
-        <Button @click="createTimeslot" :loading="loading" v-if="!editMode">Create Timeslot</Button>
-        <Button @click="saveTimeslot" :loading="loading" v-if="editMode">Update Timeslot</Button>
+        <Button @click="createTimeslot" :loading="loading" label="Create Timeslot" v-if="!editMode" />
+        <Button @click="saveTimeslot" :loading="loading" label="Update Timeslot" v-if="editMode" />
+      </div>
+    </template>
+  </Card>
+  <Card v-if="loadingData">
+    <template #content>
+      <div class="border-round border-1 surface-border p-4 surface-card">
+        <ul class="m-0 p-0 list-none">
+            <li class="mb-3">
+                <div class="flex">
+                    <div class="align-self-center" style="flex: 1">
+                        <Skeleton width="10%" height="3rem" class="mb-2"></Skeleton>
+                        <Skeleton width="100%" height="3rem" class="mb-2"></Skeleton>
+                        <Skeleton width="75%"></Skeleton>
+                    </div>
+                </div>
+            </li>
+            <li class="mb-3">
+                <div class="flex">
+                    <div class="align-self-center" style="flex: 1">
+                        <Skeleton width="100%" height="3rem" class="mb-2"></Skeleton>
+                        <Skeleton width="75%"></Skeleton>
+                    </div>
+                </div>
+            </li>
+            <li class="mb-3">
+                <div class="flex">
+                    <div class="align-self-center" style="flex: 1">
+                        <Skeleton width="10%" height="3rem" class="mb-2"></Skeleton>
+                        <Skeleton width="5%"></Skeleton>
+                    </div>
+                </div>
+            </li>
+            <li>
+              <div class="flex justify-end">
+                  <Skeleton width="10%" height="3rem"></Skeleton>
+              </div>
+            </li>
+        </ul>
       </div>
     </template>
   </Card>
