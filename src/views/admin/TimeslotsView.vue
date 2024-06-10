@@ -61,6 +61,13 @@ onMounted(async () => {
               <span class="pi pi-times-circle text-red-500" v-if="!slotProps.data.is_active"></span>
             </template>
           </Column>
+          <Column header="Movie">
+            <template #body="slotProps">
+              <router-link v-if="slotProps.data.movie" :to="{ name: 'MoviesShow', params: { id: slotProps.data.movie.id } }">
+                {{ slotProps.data.movie.title }}
+              </router-link>
+            </template>
+          </Column>
           <Column header="Actions" style="width: 25%">
             <template #body="slotProps">
               <div class="flex flex-row-reverse md:flex-row gap-2">

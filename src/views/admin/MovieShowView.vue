@@ -67,6 +67,10 @@ onMounted(() => {
             <p><strong>Director:</strong> {{ movie.director }}</p>
             <p><strong>Release Year:</strong> {{ movie.release_year }}</p>
             <p><strong>Genre:</strong> {{ movie.genre }}</p>
+            <div v-if="movie.time_slots.length" class="flex gap-2 mt-4">
+              <span class="pi pi-clock"></span>
+              <span class="text-sm font-semibold text-900" v-for="time_slot of movie.time_slots">{{ time_slot.start_time }}</span>
+            </div>
           </div>
         </div>
         <Toast />

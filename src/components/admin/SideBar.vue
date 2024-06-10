@@ -45,7 +45,7 @@ const items = ref([
         items: [
             {
                 label: 'List',
-                icon: 'pi pi-calendar',
+                icon: 'pi pi-clock',
                 command: () => {
                     router.push({ name: 'TimeslotsList' })
                 }
@@ -58,9 +58,6 @@ const items = ref([
                 }
             }
         ]
-    },
-    {
-        separator: true
     }
 ])
 </script>

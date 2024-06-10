@@ -62,19 +62,20 @@ onMounted(async () => {
                     <Tag :value="item.genre" severity="success" class="absolute" style="left: 4px; top: 4px"></Tag>
                   </div>
                   <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-4">
-                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                    <div class="flex flex-col justify-between items-start gap-2">
                       <div>
-                        <div class="text-lg font-medium text-900 mt-2">{{ item.title }}</div>
-                        <span class="font-medium text-secondary text-sm">{{ item.description }}</span>
+                        <div class="text-lg font-medium text-900 mt-2">{{ item.title }} (<span class="text-sm font-semibold text-900">{{ item.release_year }}</span>)</div>
+                        <span class="font-medium text-gray-500 text-sm">{{ item.description }}</span>
                       </div>
-                      <div class="surface-100 p-1" style="border-radius: 30px">
-                        <div class="surface-0 flex items-center gap-2 justify-center py-1 px-2" style="border-radius: 30px; box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.06)">
-                          <span class="text-900 font-medium text-sm">{{ item.director }}</span>
+                      <div class="flex flex-col">
+                        <span class="text-900 font-normal text-sm">{{ item.director }}</span>
+                        <div v-if="item.time_slots.length" class="flex gap-2 mt-4">
+                          <span class="pi pi-clock"></span>
+                          <span class="text-sm font-semibold text-900" v-for="time_slot of item.time_slots">{{ time_slot.start_time }}</span>
                         </div>
                       </div>
                     </div>
                     <div class="flex flex-col md:items-end gap-5">
-                      <span class="text-xl font-semibold text-900">{{ item.release_year }}</span>
                       <div class="flex flex-row-reverse md:flex-row gap-2">
                         <router-link :to="{ name: 'MoviesEdit', params: { id: item.id } }">
                           <Button icon="pi pi-pencil" label="Edit" class="flex-auto md:flex-initial text-nowrap"></Button>
