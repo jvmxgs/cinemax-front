@@ -6,6 +6,7 @@ import { getMovie } from '../../services/moviesService';
 
 const route = useRoute()
 const notFound = ref(false)
+const movie = ref(null)
 
 onMounted(() => {
   getMovie(route.params.id).then(res => {
@@ -15,8 +16,6 @@ onMounted(() => {
     console.log(err)
   })
 })
-
-const movie = ref(null)
 </script>
 <template>
   <Card class="shadow-none" v-if="movie">

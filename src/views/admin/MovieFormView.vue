@@ -9,16 +9,19 @@ import InlineMessage from 'primevue/inlinemessage';
 import InputText from 'primevue/inputtext';
 import Message from 'primevue/message';
 import Textarea from 'primevue/textarea';
-import { inject, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { storeMovie } from '../../services/moviesService';
+import { inject, onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { getMovie, storeMovie, updateMovie } from '../../services/moviesService';
 
+const route = useRoute()
 const router = useRouter()
 const showToast = inject('showToast')
 
 const error = ref('')
 const errors = ref([])
 const loading = ref(false)
+const editMode = ref(false)
+const notFound = ref(false)
 const title = ref('')
 const description = ref('')
 const director = ref('')
@@ -27,7 +30,7 @@ const genre = ref('')
 const poster = ref<File | null>(null)
 const imageSrc = ref<string | null>('/image-dummy.jpg')
 
-const years = [];
+const years = []
 for (let year = 2025; year >= 1800; year--) {
   years.push({ value: year.toString() });
 }
@@ -43,14 +46,8 @@ const updatePoster = (event) => {
   reader.readAsDataURL(event.files[0])
 }
 
-const createMovie = async (event) => {
-  const formData = new FormData();
-  formData.append('poster', poster.value ?? '')
-  formData.append('title', title.value ?? '')
-  formData.append('description', description.value ?? '')
-  formData.append('director', director.value ?? '')
-  formData.append('release_year', release_year.value.value ?? '')
-  formData.append('genre', genre.value.value ?? '')
+const createMovie = async () => {
+  const formData = parseFormData()
 
   storeMovie(formData)
   .then((response) => {
@@ -63,8 +60,51 @@ const createMovie = async (event) => {
     errors.value = e.response.data.errors
     error.value = e.response.data.message
   })
-
 }
+
+const saveMovie = async () => {
+  const formData = parseFormData()
+  formData.append('_method', 'PATCH')
+
+  updateMovie(formData, route.params.id)
+  .then((response) => {
+    loading.value = true
+    showToast('success', 'Movie updated', response.data.message, 3000)
+    router.push('/admin/movies/' + response.data.data.id)
+  })
+  .catch((e) => {
+    loading.value = false
+    errors.value = e.response.data.errors
+    error.value = e.response.data.message
+  })
+}
+
+const parseFormData = () => {
+  const formData = new FormData();
+  formData.append('poster', poster.value ?? '')
+  formData.append('title', title.value ?? '')
+  formData.append('description', description.value ?? '')
+  formData.append('director', director.value ?? '')
+  formData.append('release_year', release_year.value.value ?? '')
+  formData.append('genre', genre.value.value ?? '')
+  return formData
+}
+
+onMounted(() => {
+  if (route.params.id) {
+    getMovie(route.params.id).then(res => {
+      title.value = res.data.title
+      description.value = res.data.description
+      director.value = res.data.director
+      release_year.value = new Proxy({ value: res.data.release_year.toString() }, {})
+      genre.value = new Proxy({ value: res.data.genre }, {})
+      editMode.value = true
+    }).catch(err => {
+      notFound.value = true
+      console.log(err)
+    })
+  }
+})
 
 const genres = [
   { value: 'Action' },
@@ -144,7 +184,8 @@ const genres = [
       </div>
     </template>
     <template #footer>
-      <Button @click="createMovie">Create movie</Button>
+      <Button @click="createMovie" v-if="!editMode">Create movie</Button>
+      <Button @click="saveMovie" v-if="editMode">Update movie</Button>
     </template>
   </Card>
 </template>

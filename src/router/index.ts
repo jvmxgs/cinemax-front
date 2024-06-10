@@ -69,6 +69,14 @@ const router = createRouter({
               meta: {
                 breadcrumb: 'Add movie'
               },
+            },
+            {
+              path: ':id/edit',
+              name: 'MoviesEdit',
+              component: MovieFormView,
+              meta: {
+                breadcrumb: 'Edit movie'
+              },
             }
           ]
         }

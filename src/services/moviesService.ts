@@ -23,6 +23,16 @@ export const storeMovie = async (data) => {
   return response
 }
 
+export const updateMovie = async (data, movieId) => {
+  const response = await axios.post('/movies/' + movieId, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    transformRequest: [(data) => data]
+  })
+  return response
+}
+
 export const deleteMovie = async (movieId) => {
   const response = await axios.delete('/movies/' + movieId)
   return response.data
