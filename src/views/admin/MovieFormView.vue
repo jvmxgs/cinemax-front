@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import Button from 'primevue/button';
+import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Dropdown from 'primevue/dropdown';
 import FileUpload from 'primevue/fileupload';
@@ -81,7 +81,9 @@ const saveMovie = async () => {
 
 const parseFormData = () => {
   const formData = new FormData();
-  formData.append('poster', poster.value ?? '')
+  if (poster.value) {
+    formData.append('poster', poster.value)
+  }
   formData.append('title', title.value ?? '')
   formData.append('description', description.value ?? '')
   formData.append('director', director.value ?? '')
@@ -139,7 +141,7 @@ const genres = [
         <transition-group name="p-message" tag="div">
           <Message v-if="error" severity="error">{{ error }}</Message>
         </transition-group>
-        <div class="grid grid-cols-2 grid-flow-row gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row gap-8">
           <div class="flex flex-col gap-3">
             <FloatLabel class="flex flex-col">
               <InputText v-model="title" inputId="title" :invalid="!! errors?.title" />
@@ -184,8 +186,10 @@ const genres = [
       </div>
     </template>
     <template #footer>
-      <Button @click="createMovie" v-if="!editMode">Create movie</Button>
-      <Button @click="saveMovie" v-if="editMode">Update movie</Button>
+      <div class="flex justify-end w-full">
+        <Button @click="createMovie" v-if="!editMode">Create movie</Button>
+        <Button @click="saveMovie" v-if="editMode">Update movie</Button>
+      </div>
     </template>
   </Card>
 </template>

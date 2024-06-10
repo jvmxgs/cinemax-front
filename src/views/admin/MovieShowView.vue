@@ -1,12 +1,37 @@
 <script setup lang="ts">
+import Button from 'primevue/button';
 import Card from 'primevue/card';
+import ConfirmPopup from 'primevue/confirmpopup';
+import Toast from 'primevue/toast';
+import { useConfirm } from 'primevue/useconfirm';
+import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { getMovie } from '../../services/moviesService';
+import { useRoute, useRouter } from 'vue-router';
+import { deleteMovie, getMovie } from '../../services/moviesService';
 
 const route = useRoute()
+const router = useRouter()
 const notFound = ref(false)
 const movie = ref(null)
+const confirm = useConfirm()
+const toast = useToast()
+
+const deleteItem = (event, movieId) => {
+  confirm.require({
+    target: event.currentTarget,
+    group: 'headless',
+    message: 'Delete this item?',
+    accept: () => {
+      deleteMovie(movieId).then((response) => {
+        toast.add({severity:'success', summary:'Deleted', detail:response.message, life: 3000})
+      }).catch((error) => {
+        toast.add({severity:'error', summary:'Error', detail:error.response.data.message, life: 3000})
+      }).finally(() => {
+        router.push('/admin/movies')
+      })
+    }
+  })
+}
 
 onMounted(() => {
   getMovie(route.params.id).then(res => {
@@ -19,9 +44,19 @@ onMounted(() => {
 </script>
 <template>
   <Card class="shadow-none" v-if="movie">
-    <template #title>Simple Card</template>
+    <template #title>
+      <div class="flex justify-between">
+        Simple Card
+        <div class="flex items-center justify-center gap-4">
+          <router-link :to="{ name: 'MoviesEdit', params: { id: movie.id } }">
+            <Button icon="pi pi-pencil" aria-label="Submit" />
+          </router-link>
+          <Button @click="deleteItem($event, movie.id)" icon="pi pi-trash" outlined severity="danger"></Button>
+        </div>
+      </div>
+    </template>
     <template #content>
-      <div class="max-w-4xl mx-auto p-6">
+      <div>
         <div class="flex flex-col md:flex-row">
           <div class="md:w-1/3 mb-4 md:mb-0">
             <img :src="movie.poster" alt="Movie Poster" class="w-full rounded-lg">
@@ -32,10 +67,20 @@ onMounted(() => {
             <p><strong>Director:</strong> {{ movie.director }}</p>
             <p><strong>Release Year:</strong> {{ movie.release_year }}</p>
             <p><strong>Genre:</strong> {{ movie.genre }}</p>
-            <p class="text-gray-500 text-sm mt-4">Created at: {{ movie.created_at }}</p>
-            <p class="text-gray-500 text-sm">Updated at: {{ movie.updated_at }}</p>
           </div>
         </div>
+        <Toast />
+        <ConfirmPopup group="headless">
+          <template #container="{ message, acceptCallback, rejectCallback }">
+              <div class="border-round p-3">
+                  <span>{{ message.message }}</span>
+                  <div class="flex align-items-center gap-2 mt-3">
+                      <Button label="Delete" @click="acceptCallback" severity="danger" size="small"></Button>
+                      <Button label="Cancel" outlined @click="rejectCallback" severity="secondary" size="small" text></Button>
+                  </div>
+              </div>
+          </template>
+        </ConfirmPopup>
       </div>
     </template>
   </Card>
