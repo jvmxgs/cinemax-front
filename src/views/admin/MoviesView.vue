@@ -77,6 +77,9 @@ onMounted(async () => {
                       <span class="text-xl font-semibold text-900">${{ item.release_year }}</span>
                       <div class="flex flex-row-reverse md:flex-row gap-2">
                         <Button icon="pi pi-pencil" label="Edit" class="flex-auto md:flex-initial text-nowrap"></Button>
+                        <router-link :to="{ name: 'MoviesShow', params: { id: item.id } }">
+                          <Button title="Show movie" icon="pi pi-eye" severity="info"></Button>
+                        </router-link>
                         <Button @click="deleteItem($event, item.id)" icon="pi pi-trash" outlined severity="danger"></Button>
                       </div>
                     </div>
