@@ -9,9 +9,9 @@ export const getMovies = async (currentPage = 1) => {
   }
 }
 
-export const deleteMovie = async (movieId) => {
-    const response = await axios.delete('/movies/' + movieId)
-    return response.data
+export const getMovie = async (movieId) => {
+  const response = await axios.get('/movies/' + movieId)
+  return response.data
 }
 
 export const storeMovie = async (data) => {
@@ -21,4 +21,9 @@ export const storeMovie = async (data) => {
     }
   })
   return response
+}
+
+export const deleteMovie = async (movieId) => {
+  const response = await axios.delete('/movies/' + movieId)
+  return response.data
 }

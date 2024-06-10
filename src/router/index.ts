@@ -5,6 +5,7 @@ import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import AdminView from '@/views/admin/AdminView.vue'
 import MovieFormView from '@/views/admin/MovieFormView.vue'
+import MovieShowView from '@/views/admin/MovieShowView.vue'
 import MoviesView from '@/views/admin/MoviesView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -51,6 +52,14 @@ const router = createRouter({
               component: MoviesView,
               meta: {
                 breadcrumb: 'List'
+              },
+            },
+            {
+              path: ':id',
+              name: 'MoviesShow',
+              component: MovieShowView,
+              meta: {
+                breadcrumb: 'Movie'
               },
             },
             {

@@ -45,12 +45,12 @@ const updatePoster = (event) => {
 
 const createMovie = async (event) => {
   const formData = new FormData();
-  formData.append('poster', poster.value)
-  formData.append('title', title.value)
-  formData.append('description', description.value)
-  formData.append('director', director.value)
-  formData.append('release_year', release_year.value.value)
-  formData.append('genre', genre.value.value)
+  formData.append('poster', poster.value ?? '')
+  formData.append('title', title.value ?? '')
+  formData.append('description', description.value ?? '')
+  formData.append('director', director.value ?? '')
+  formData.append('release_year', release_year.value.value ?? '')
+  formData.append('genre', genre.value.value ?? '')
 
   storeMovie(formData)
   .then((response) => {
