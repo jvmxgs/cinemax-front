@@ -135,7 +135,7 @@ const genres = [
 </script>
 <template>
   <Card class="shadow-none">
-    <template #title>Add movie</template>
+    <template #title>{{ editMode ? 'Edit movie' : 'Add movie' }}</template>
     <template #content>
       <div>
         <transition-group name="p-message" tag="div">
@@ -187,8 +187,8 @@ const genres = [
     </template>
     <template #footer>
       <div class="flex justify-end w-full">
-        <Button @click="createMovie" v-if="!editMode">Create movie</Button>
-        <Button @click="saveMovie" v-if="editMode">Update movie</Button>
+        <Button @click="createMovie" :loading="loading" v-if="!editMode">Create movie</Button>
+        <Button @click="saveMovie" :loading="loading" v-if="editMode">Update movie</Button>
       </div>
     </template>
   </Card>

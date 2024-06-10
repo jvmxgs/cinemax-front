@@ -124,8 +124,8 @@ onMounted(() => {
     </template>
     <template #footer>
       <div class="flex justify-end w-full">
-        <Button @click="createTimeslot" v-if="!editMode">Create Timeslot</Button>
-        <Button @click="saveTimeslot" v-if="editMode">Update Timeslot</Button>
+        <Button @click="createTimeslot" :loading="loading" v-if="!editMode">Create Timeslot</Button>
+        <Button @click="saveTimeslot" :loading="loading" v-if="editMode">Update Timeslot</Button>
       </div>
     </template>
   </Card>

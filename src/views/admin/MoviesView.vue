@@ -4,6 +4,7 @@ import Card from 'primevue/card'
 import ConfirmPopup from 'primevue/confirmpopup'
 import DataView from 'primevue/dataview'
 import Paginator from 'primevue/paginator'
+import Skeleton from 'primevue/skeleton'
 import Tag from 'primevue/tag'
 import Toast from 'primevue/toast'
 import { useConfirm } from "primevue/useconfirm"
@@ -15,15 +16,18 @@ const confirm = useConfirm()
 const toast = useToast()
 const movies = ref()
 const pagination = ref()
+const loading = ref(false)
 
 const pageEvent = async (value) => {
   await getPaginatedMovies(value.page + 1)
 }
 
 const getPaginatedMovies = async (page) => {
+  loading.value = true
   const response = await getMovies(page)
   movies.value = response.data
   pagination.value = response.meta
+  loading.value = false
 }
 
 const deleteItem = (event, movieId) => {
@@ -52,7 +56,7 @@ onMounted(async () => {
     <template #title>Movies</template>
     <template #content>
       <div class="card">
-        <DataView :value="movies">
+        <DataView :value="movies" v-if="!loading">
           <template #list="slotProps">
             <div class="grid grid-nogutter">
               <div v-for="(item, index) in slotProps.items" :key="index" class="col-12">
@@ -92,7 +96,47 @@ onMounted(async () => {
             </div>
           </template>
         </DataView>
-        <Paginator v-if="pagination" @page="pageEvent" :rows="pagination.per_page" :totalRecords="pagination.total"></Paginator>
+        <div v-if="loading" class="border-round border-1 surface-border p-4 surface-card">
+            <ul class="m-0 p-0 list-none">
+                <li class="mb-3">
+                    <div class="flex">
+                        <Skeleton shape="circle" size="4rem" class="mr-2"></Skeleton>
+                        <div class="align-self-center" style="flex: 1">
+                            <Skeleton width="100%" class="mb-2"></Skeleton>
+                            <Skeleton width="75%"></Skeleton>
+                        </div>
+                    </div>
+                </li>
+                <li class="mb-3">
+                    <div class="flex">
+                        <Skeleton shape="circle" size="4rem" class="mr-2"></Skeleton>
+                        <div class="align-self-center" style="flex: 1">
+                            <Skeleton width="100%" class="mb-2"></Skeleton>
+                            <Skeleton width="75%"></Skeleton>
+                        </div>
+                    </div>
+                </li>
+                <li class="mb-3">
+                    <div class="flex">
+                        <Skeleton shape="circle" size="4rem" class="mr-2"></Skeleton>
+                        <div class="align-self-center" style="flex: 1">
+                            <Skeleton width="100%" class="mb-2"></Skeleton>
+                            <Skeleton width="75%"></Skeleton>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex">
+                        <Skeleton shape="circle" size="4rem" class="mr-2"></Skeleton>
+                        <div class="align-self-center" style="flex: 1">
+                            <Skeleton width="100%" class="mb-2"></Skeleton>
+                            <Skeleton width="75%"></Skeleton>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <Paginator v-if="pagination && !loading" @page="pageEvent" :rows="pagination.per_page" :totalRecords="pagination.total"></Paginator>
       </div>
       <Toast />
       <ConfirmPopup group="headless">

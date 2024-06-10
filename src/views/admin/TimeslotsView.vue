@@ -5,6 +5,7 @@ import Column from 'primevue/column'
 import ConfirmPopup from 'primevue/confirmpopup'
 import DataTable from 'primevue/datatable'
 import Paginator from 'primevue/paginator'
+import Skeleton from 'primevue/skeleton'
 import Toast from 'primevue/toast'
 import { useConfirm } from "primevue/useconfirm"
 import { useToast } from "primevue/usetoast"
@@ -15,15 +16,19 @@ const confirm = useConfirm()
 const toast = useToast()
 const timeslots = ref()
 const pagination = ref()
+const loading = ref(false)
+const products = ref(new Array(4))
 
 const pageEvent = async (value) => {
   await getPaginatedTimeslots(value.page + 1)
 }
 
 const getPaginatedTimeslots = async (page) => {
+  loading.value = true
   const response = await getTimeslots(page)
   timeslots.value = response.data
   pagination.value = response.meta
+  loading.value = false
 }
 
 const deleteItem = (event, timeslotId) => {
@@ -53,7 +58,7 @@ onMounted(async () => {
     <template #title>Timeslots</template>
     <template #content>
       <div class="card">
-        <DataTable :value="timeslots" tableStyle="min-width: 50rem">
+        <DataTable :value="timeslots" tableStyle="min-width: 50rem" v-if="!loading">
           <Column field="start_time" header="Start time"></Column>
           <Column header="Active">
             <template #body="slotProps">
@@ -79,7 +84,29 @@ onMounted(async () => {
             </template>
           </Column>
         </DataTable>
-        <Paginator v-if="pagination" @page="pageEvent" :rows="pagination.per_page" :totalRecords="pagination.total"></Paginator>
+        <DataTable :value="products" v-if="loading">
+            <Column field="code" header="Start time">
+                <template #body>
+                    <Skeleton></Skeleton>
+                </template>
+            </Column>
+            <Column field="name" header="Active">
+                <template #body>
+                    <Skeleton></Skeleton>
+                </template>
+            </Column>
+            <Column field="category" header="Movie">
+                <template #body>
+                    <Skeleton></Skeleton>
+                </template>
+            </Column>
+            <Column field="quantity" header="Actions">
+                <template #body>
+                    <Skeleton></Skeleton>
+                </template>
+            </Column>
+        </DataTable>
+        <Paginator v-if="pagination && !loading" @page="pageEvent" :rows="pagination.per_page" :totalRecords="pagination.total"></Paginator>
       </div>
       <Toast />
       <ConfirmPopup group="headless">
