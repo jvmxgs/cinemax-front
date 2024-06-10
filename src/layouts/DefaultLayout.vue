@@ -12,7 +12,7 @@ const authStore = useAuthStore()
 </script>
 
 <template>
-  <div>
+  <div class="h-screen flex flex-col">
     <header>
       <Menubar>
         <template #start>
@@ -28,7 +28,7 @@ const authStore = useAuthStore()
         </template>
       </Menubar>
     </header>
-    <main>
+    <main class="flex-grow">
       <router-view />
     </main>
   </div>

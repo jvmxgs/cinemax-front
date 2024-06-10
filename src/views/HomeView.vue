@@ -1,27 +1,25 @@
 <script setup lang="ts">
 import Carousel from 'primevue/carousel';
+import ProgressSpinner from 'primevue/progressspinner';
 import Tag from 'primevue/tag';
 import { onMounted, ref } from 'vue';
 import { getBillboard } from '../services/billboardService';
 
 const timeSlots = ref([])
+const loadingData = ref(false)
 
 onMounted(() => {
+  loadingData.value = true
   getBillboard().then((response) => {
     timeSlots.value = response.data
     console.log(response.data)
-  })
+  }).finally(()  => loadingData.value = false)
 })
 </script>
 
 <template>
-  <main>
-    <!-- <Card v-for="(timeSlot, key) of timeSlots" v-bind:key="key">
-      <template #content>
-        {{ timeSlot.start_time }}
-      </template>
-    </Card> -->
-    <Carousel :value="timeSlots" :numVisible="3" :numScroll="1" circular :autoplayInterval="3000">
+  <main class="h-full">
+    <Carousel v-if="!loadingData" :value="timeSlots" :numVisible="3" :numScroll="1" circular :autoplayInterval="3000">
       <template #item="slotProps">
         <div class="border-1 surface-border border-round m-2  p-3">
           <div class="mb-3">
@@ -41,5 +39,8 @@ onMounted(() => {
         </div>
       </template>
     </Carousel>
+    <div v-if="loadingData" class="h-full flex justify-center items-center">
+      <ProgressSpinner />
+    </div>
   </main>
 </template>
