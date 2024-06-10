@@ -2,10 +2,12 @@
 import NavBar from '@/components/admin/NavBar.vue';
 import SideBar from '@/components/admin/SideBar.vue';
 import Breadcrumb from 'primevue/breadcrumb';
-import { computed, ref } from 'vue';
+import Toast from 'primevue/toast';
+import { computed, provide, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
+const globalToast = ref(null)
 
 const home = ref({
     icon: 'pi pi-home',
@@ -25,6 +27,12 @@ const breadcrumbItems = computed(() => {
       url: route.path
     }))
 })
+
+const showToast = (severity, summary, detail, life) => {
+  globalToast.value.add({ severity, summary, detail, life })
+};
+
+provide('showToast', showToast);
 </script>
 
 <template>
@@ -37,5 +45,6 @@ const breadcrumbItems = computed(() => {
         <router-view />
       </div>
     </div>
+    <Toast ref="globalToast" />
   </main>
 </template>

@@ -13,3 +13,12 @@ export const deleteMovie = async (movieId) => {
     const response = await axios.delete('/movies/' + movieId)
     return response.data
 }
+
+export const storeMovie = async (data) => {
+  const response = await axios.post('/movies', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  return response
+}

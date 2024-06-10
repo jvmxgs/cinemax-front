@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import AdminView from '@/views/admin/AdminView.vue'
+import MovieFormView from '@/views/admin/MovieFormView.vue'
 import MoviesView from '@/views/admin/MoviesView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -40,16 +41,22 @@ const router = createRouter({
         },
         {
           path: 'movies',
-          name: 'MoviesList',
-          component: MoviesView,
           meta: {
             breadcrumb: 'Movies'
           },
           children: [
             {
+              path: '',
+              name: 'MoviesList',
+              component: MoviesView,
+              meta: {
+                breadcrumb: 'List'
+              },
+            },
+            {
               path: 'add',
               name: 'MoviesAdd',
-              component: MoviesView,
+              component: MovieFormView,
               meta: {
                 breadcrumb: 'Add movie'
               },
